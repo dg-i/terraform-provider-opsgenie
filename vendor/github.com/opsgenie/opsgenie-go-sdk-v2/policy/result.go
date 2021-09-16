@@ -36,11 +36,11 @@ type GetAlertPolicyResult struct {
 type GetNotificationPolicyResult struct {
 	client.ResultMetadata
 	MainFields
-	AutoRestartAction         *AutoRestartAction   `json:"autoRestartAction,omitempty"`
-	AutoCloseAction           *AutoCloseAction     `json:"autoCloseAction,omitempty"`
-	DeDuplicationAction 	  *DeDuplicationAction `json:"deduplicationAction,omitempty"`
-	DelayAction               *DelayAction         `json:"delayAction,omitempty"`
-	Suppress                  bool                 `json:"suppress,omitempty"`
+	AutoRestartAction   *AutoRestartAction   `json:"autoRestartAction,omitempty"`
+	AutoCloseAction     *AutoCloseAction     `json:"autoCloseAction,omitempty"`
+	DeDuplicationAction *DeDuplicationAction `json:"deduplicationAction,omitempty"`
+	DelayAction         *DelayAction         `json:"delayAction,omitempty"`
+	Suppress            bool                 `json:"suppress,omitempty"`
 }
 
 type PolicyResult struct {
