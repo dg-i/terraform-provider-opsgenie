@@ -205,6 +205,13 @@ func resourceOpsGenieAlertPolicy() *schema.Resource {
 				Optional: true,
 				Default:  "{{description}}",
 			},
+			"details": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"entity": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -316,6 +323,7 @@ func resourceOpsGenieAlertPolicyCreate(ctx context.Context, d *schema.ResourceDa
 		Priority:                 alert.Priority(priority),
 		Actions:                  flattenOpsgenieAlertPolicyActions(d),
 		Tags:                     flattenOpsgenieAlertPolicyTags(d),
+		Details:                  flattenOpsgenieAlertPolicyDetailsCreate(d),
 	}
 
 	if len(d.Get("responders").([]interface{})) > 0 {
@@ -435,6 +443,7 @@ func resourceOpsGenieAlertPolicyUpdate(d *schema.ResourceData, meta interface{})
 		Priority:                 alert.Priority(priority),
 		Actions:                  flattenOpsgenieAlertPolicyActions(d),
 		Tags:                     flattenOpsgenieAlertPolicyTags(d),
+		Details:                  flattenOpsgenieAlertPolicyDetailsUpdate(d),
 	}
 
 	if len(d.Get("responders").([]interface{})) > 0 {
