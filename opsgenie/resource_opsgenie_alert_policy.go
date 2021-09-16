@@ -306,7 +306,7 @@ func resourceOpsGenieAlertPolicyCreate(ctx context.Context, d *schema.ResourceDa
 	ignore_original_details := d.Get("ignore_original_details").(bool)
 	ignore_original_responders := d.Get("ignore_original_responders").(bool)
 	ignore_original_tags := d.Get("ignore_original_tags").(bool)
-    details := d.Get("details").(map[string]interface{})
+	details := d.Get("details").(map[string]interface{})
 
 	createRequest := &policy.CreateAlertPolicyRequest{
 		MainFields:               *expandOpsGenieAlertPolicyRequestMainFields(d),
@@ -426,7 +426,7 @@ func resourceOpsGenieAlertPolicyUpdate(d *schema.ResourceData, meta interface{})
 	ignore_original_responders := d.Get("ignore_original_responders").(bool)
 	ignore_original_tags := d.Get("ignore_original_tags").(bool)
 	priority := d.Get("priority").(string)
-    details := d.Get("details").(map[string]interface{})
+	details := d.Get("details").(map[string]interface{})
 
 	updateRequest := &policy.UpdateAlertPolicyRequest{
 		Id:                       d.Id(),
