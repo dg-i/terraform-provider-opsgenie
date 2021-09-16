@@ -6,7 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
-	"strconv"
 
 	"log"
 	"strings"
@@ -302,11 +301,12 @@ func resourceOpsGenieAlertPolicyCreate(ctx context.Context, d *schema.ResourceDa
 	description := d.Get("description").(string)
 	entity := d.Get("entity").(string)
 	source := d.Get("source").(string)
+	priority := d.Get("priority").(string)
 	ignore_original_actions := d.Get("ignore_original_actions").(bool)
 	ignore_original_details := d.Get("ignore_original_details").(bool)
 	ignore_original_responders := d.Get("ignore_original_responders").(bool)
 	ignore_original_tags := d.Get("ignore_original_tags").(bool)
-	priority := d.Get("priority").(string)
+    details := d.Get("details").(map[string]interface{})
 
 	createRequest := &policy.CreateAlertPolicyRequest{
 		MainFields:               *expandOpsGenieAlertPolicyRequestMainFields(d),
@@ -323,7 +323,7 @@ func resourceOpsGenieAlertPolicyCreate(ctx context.Context, d *schema.ResourceDa
 		Priority:                 alert.Priority(priority),
 		Actions:                  flattenOpsgenieAlertPolicyActions(d),
 		Tags:                     flattenOpsgenieAlertPolicyTags(d),
-		Details:                  flattenOpsgenieAlertPolicyDetailsCreate(d),
+		Details:                  details,
 	}
 
 	if len(d.Get("responders").([]interface{})) > 0 {
@@ -426,6 +426,7 @@ func resourceOpsGenieAlertPolicyUpdate(d *schema.ResourceData, meta interface{})
 	ignore_original_responders := d.Get("ignore_original_responders").(bool)
 	ignore_original_tags := d.Get("ignore_original_tags").(bool)
 	priority := d.Get("priority").(string)
+    details := d.Get("details").(map[string]interface{})
 
 	updateRequest := &policy.UpdateAlertPolicyRequest{
 		Id:                       d.Id(),
@@ -443,7 +444,7 @@ func resourceOpsGenieAlertPolicyUpdate(d *schema.ResourceData, meta interface{})
 		Priority:                 alert.Priority(priority),
 		Actions:                  flattenOpsgenieAlertPolicyActions(d),
 		Tags:                     flattenOpsgenieAlertPolicyTags(d),
-		Details:                  flattenOpsgenieAlertPolicyDetailsUpdate(d),
+		Details:                  details,
 	}
 
 	if len(d.Get("responders").([]interface{})) > 0 {
@@ -718,35 +719,4 @@ func flattenOpsgenieAlertPolicyActions(d *schema.ResourceData) []string {
 	}
 
 	return actions
-}
-
-func flattenOpsgenieAlertPolicyDetailsCreate(d *schema.ResourceData) []string {
-	input := d.Get("details").(*schema.Set)
-	details := make([]string, len(input.List()))
-
-	if input == nil {
-		return details
-	}
-
-	for k, v := range input.List() {
-		details[k] = v.(string)
-	}
-
-	return details
-}
-
-func flattenOpsgenieAlertPolicyDetailsUpdate(d *schema.ResourceData) map[string]interface{} {
-	input := d.Get("details").(*schema.Set)
-	details := make(map[string]interface{}, len(input.List()))
-
-	if input == nil {
-		return details
-	}
-
-	for k, v := range input.List() {
-		index := strconv.Itoa(k)
-		details[index] = v
-	}
-
-	return details
 }
